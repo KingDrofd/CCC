@@ -256,9 +256,16 @@ MonoBehaviour:
   jumpDuration: 0.4
   normalizedAngleThreshold: 0.1
   wallGravity: 20
+  wallSpeed: 1
+  WallRunUpAngle: 10
+  WallRunDownAngle: -10
   isWallRunning: 0
   jumping: 0
   characterController: {fileID: 674766762}
+  mouseLook: {fileID: 674766765}
+  camera: {fileID: 2060775350}
+  maxAngleRoll: 10
+  cameraTransitionDuration: 0.25
 --- !u!114 &674766762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,16 +282,20 @@ MonoBehaviour:
   charVelocity: {x: 0, y: 0, z: 0}
   Speed: 5
   charController: {fileID: 0}
+  playerCamera: {fileID: 2060775350}
   Ground:
     serializedVersion: 2
     m_Bits: 64
   JumpHeight: 2
   jumpForce: 8
   GroundDistance: 0.2
+  rotationSpeed: 1
+  rotationMultiplier: 1
   DashSpeed: 5
   DashDistance: 3.15
   DashTime: 0
   Drag: {x: 10, y: 0, z: 10}
+  wallRun: {fileID: 674766761}
 --- !u!143 &674766763
 CharacterController:
   m_ObjectHideFlags: 0
@@ -311,7 +322,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 674766760}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.51, y: 1, z: -8.24}
+  m_LocalPosition: {x: -0.35, y: 1, z: -4.43}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2060775348}
@@ -325,13 +336,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 674766760}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e4a7cc0fc1ec39443b75877099e36d53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 674766764}
   playerCamera: {fileID: 2060775350}
+  lookDirection: {x: 0, y: 0}
   lookSensitivity: 3
   smooting: 1
 --- !u!1 &832395187
@@ -568,6 +580,7 @@ GameObject:
   - component: {fileID: 2060775348}
   - component: {fileID: 2060775350}
   - component: {fileID: 2060775349}
+  - component: {fileID: 2060775351}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -640,3 +653,16 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &2060775351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060775347}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b478a331b50d83c49a5d6f75ab3c6d88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 1

@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 52626403}
   - component: {fileID: 52626402}
   - component: {fileID: 52626401}
+  - component: {fileID: 52626404}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -206,6 +207,19 @@ Transform:
   m_Father: {fileID: 746738547}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &52626404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 52626400}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b478a331b50d83c49a5d6f75ab3c6d88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 1
 --- !u!1 &157496999
 GameObject:
   m_ObjectHideFlags: 0
@@ -685,7 +699,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 746738543}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e4a7cc0fc1ec39443b75877099e36d53, type: 3}
   m_Name: 
@@ -693,8 +707,8 @@ MonoBehaviour:
   player: {fileID: 746738547}
   playerCamera: {fileID: 52626402}
   lookDirection: {x: 0, y: 0}
-  lookSensitivity: 1
-  smooting: 1
+  lookSensitivity: 2
+  smooting: 3
 --- !u!114 &746738545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -711,13 +725,15 @@ MonoBehaviour:
   charVelocity: {x: 0, y: 0, z: 0}
   Speed: 8
   charController: {fileID: 0}
-  camera: {fileID: 52626402}
+  playerCamera: {fileID: 52626402}
   Ground:
     serializedVersion: 2
     m_Bits: 192
   JumpHeight: 5
   jumpForce: 8
   GroundDistance: 0.4
+  rotationSpeed: 1
+  rotationMultiplier: 1
   DashSpeed: 5
   DashDistance: 20
   DashTime: 0
@@ -749,7 +765,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 746738543}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.74, y: 1.09, z: 132.6}
+  m_LocalPosition: {x: -2.74, y: 1.09, z: 42.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 52626403}
@@ -770,8 +786,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallMaxDistance: 1.5
   minimumJumpHeight: 1.2
-  jumpDuration: 0.4
-  normalizedAngleThreshold: 0.1
+  jumpDuration: 0.25
+  normalizedAngleThreshold: 0.3
   wallGravity: 20
   wallSpeed: 13
   WallRunUpAngle: 10
@@ -781,9 +797,8 @@ MonoBehaviour:
   characterController: {fileID: 746738545}
   mouseLook: {fileID: 746738544}
   camera: {fileID: 52626402}
-  maxAngleRoll: 66.99
-  camTilt: 0
-  cameraTransitionDuration: 1
+  maxAngleRoll: 20
+  cameraTransitionDuration: 0.4
 --- !u!1 &859489012
 GameObject:
   m_ObjectHideFlags: 0

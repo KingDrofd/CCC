@@ -55,6 +55,8 @@ public class MouseLook : MonoBehaviour
 
     //void HandleMouseLook()
     //{
+    //    float mouseX = Input.GetAxisRaw("Horizontal");
+    //    float mouseY = Input.GetAxisRaw("Vertical");
     //    Quaternion cameraRotation = Quaternion.Euler(mouseY, 0f, 0f);
     //    Quaternion playerRotation = Quaternion.Euler(0f, mouseX, 0f);
 

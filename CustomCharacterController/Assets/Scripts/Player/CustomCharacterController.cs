@@ -13,7 +13,7 @@ public class CustomCharacterController : MonoBehaviour
     [HideInInspector]public Vector3 charVelocity;   
     public float Speed = 5f;
     [HideInInspector]public CharacterController charController;
-     public new Camera camera;
+     public new Camera playerCamera;
 
     [Header("Jump")]
     public LayerMask Ground;
@@ -24,6 +24,11 @@ public class CustomCharacterController : MonoBehaviour
     public float GroundDistance = 0.2f;
     private bool isGrounded = true;
 
+
+    [Header("looking")]
+    public float rotationSpeed;
+    public float rotationMultiplier;
+    float verticalCamAng = 0f;
 
     [Header("Dash")]
     public float DashSpeed = 5f;
@@ -44,8 +49,26 @@ public class CustomCharacterController : MonoBehaviour
    
     void MovementHandler()
     {
+
+        transform.Rotate(new Vector3(0f, (Input.GetAxis("Mouse X") * rotationSpeed * rotationMultiplier)));
+        verticalCamAng -= Input.GetAxis("Mouse Y");
+        verticalCamAng = Mathf.Clamp(verticalCamAng, -89f, 89f);
+
+        if(wallRun != null)
+        {
+            playerCamera.transform.localEulerAngles = new Vector3(verticalCamAng, 0, wallRun.GetCameraRoll());
+
+        }
+        else
+        {
+            playerCamera.transform.localEulerAngles = new Vector3(verticalCamAng, 0, 0);
+        }
+
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
+
+        
+        
 
         Vector3 move = transform.right * x + transform.forward * z;
 
@@ -119,7 +142,7 @@ public class CustomCharacterController : MonoBehaviour
         {
             Dash();
         }
-        Vector3 downwards = transform.TransformDirection(Vector3.down);
+        
         
 
         

@@ -32,12 +32,15 @@ public class WallRun : MonoBehaviour
     Vector3[] directions;
 
 
-    [Header("Camera")]
+
+
+    [Header("Looking")]
     public MouseLook mouseLook;
     public new Camera camera;
     public float maxAngleRoll;
-    public float camTilt;
     public float cameraTransitionDuration;
+
+
 
     private void Start()
     {
@@ -48,7 +51,10 @@ public class WallRun : MonoBehaviour
             Vector3.left + Vector3.forward,
             Vector3.forward
         };
+        
     }
+
+    
 
     float CalculateSide()
     {
@@ -61,11 +67,12 @@ public class WallRun : MonoBehaviour
         }
         return 0;
     }
+
     public float GetCameraRoll()
     {
         float dir = CalculateSide();
-        float cameraAngle = characterController.camera.transform.eulerAngles.z;
-        float targetAngle = 0;
+        float cameraAngle = camera.transform.eulerAngles.z;
+        float targetAngle = 0f;
         if (dir != 0)
         {
             targetAngle = Mathf.Sign(dir) * maxAngleRoll;
@@ -87,6 +94,7 @@ public class WallRun : MonoBehaviour
 
     private void LateUpdate()
     {
+       
         isWallRunning = false;
        if(Input.GetButtonDown("Jump"))
         {
@@ -102,8 +110,7 @@ public class WallRun : MonoBehaviour
                 Physics.Raycast(transform.position, direction, out hitDir[i], wallMaxDistance);
                 if (hitDir[i].collider != null)
                 {
-                    Debug.DrawRay(transform.position, direction * hitDir[i].distance, Color.red);
-                    Debug.Log("Hitting " + hitDir[i] + hitDir[i].distance);
+                    Debug.DrawRay(transform.position, direction * hitDir[i].distance, Color.red);                    
                 }
                 else
                 {
@@ -128,14 +135,16 @@ public class WallRun : MonoBehaviour
             if (mouseLook.lookDirection.y >= WallRunUpAngle)
             {
                 characterController.charVelocity += Time.deltaTime * wallGravity * Vector3.up;
+                
 
             }
             else if (mouseLook.lookDirection.y <= WallRunDownAngle)
             {
                 characterController.charVelocity += Time.deltaTime * wallGravity * Vector3.down;
+               
             }
 
-           
+              
             Debug.Log("wallRunning");
         }else
         {
@@ -171,14 +180,17 @@ public class WallRun : MonoBehaviour
             Vector3 downWall = transform.TransformDirection(Vector3.down + Vector3.forward);
             Debug.DrawRay(transform.position, alongWall.normalized * 10, Color.green);
             Debug.DrawRay(transform.position, lastWallNormal * 10, Color.magenta);
-            characterController.charVelocity = alongWall * vertical * wallSpeed;
+           
+            characterController.charVelocity = vertical * wallSpeed * alongWall;
+
             if (mouseLook.lookDirection.y >= WallRunUpAngle)
-            { characterController.charVelocity = upWall * vertical; }    
-            if (mouseLook.lookDirection.y <= WallRunDownAngle)
-            { characterController.charVelocity = downWall * vertical; }
+            { characterController.charVelocity = vertical * wallSpeed * upWall; }    
+
+            else if (mouseLook.lookDirection.y <= WallRunDownAngle)
+            { characterController.charVelocity = vertical * wallSpeed * downWall; }
                 
             isWallRunning = true;
         }
     }
-
+    
 }
