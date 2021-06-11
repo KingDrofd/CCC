@@ -91,7 +91,7 @@ public class CustomCharacterController : MonoBehaviour
     }
     void Dash()
     {
-        float acceleration = 0f;
+       // float acceleration = 0f;
         
         if (Input.GetKeyDown(KeyCode.E))
         {
