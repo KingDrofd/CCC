@@ -26,7 +26,7 @@ public class CustomCharacterController : MonoBehaviour
     private bool isGrounded = true;
 
 
-    [Header("looking")]
+    [Header("Looking")]
     public float rotationSpeed;
     public float rotationMultiplier;
     [HideInInspector] public float verticalCamAng = 0f;

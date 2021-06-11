@@ -50,6 +50,7 @@ public class WallRun : MonoBehaviour
 
     private void Start()
     {
+        
         mouseLook = GetComponent<MouseLook>();
         characterController = GetComponent<CustomCharacterController>();
 
@@ -116,7 +117,7 @@ public class WallRun : MonoBehaviour
     {
 
         isWallRunning = false;
-        if (canRunAlong == true || canRunDown == true || canRunUp == true)
+        if ((canRunAlong == true && (canRunDown == false && canRunUp == false)) || (canRunUp == true &&(canRunDown == false && canRunAlong == false)) || (canRunDown == true &&(canRunAlong == false && canRunUp == false)))
         {
             if (Input.GetButtonDown("Jump"))
             {
@@ -181,7 +182,7 @@ public class WallRun : MonoBehaviour
         }
         else 
         {
-            Debug.LogError("No Direction specified in Wall Run Directions");
+            Debug.LogError("No Direction specified in 'Wall Run Direction' or Chose more than one direction");
         }
     }
 
@@ -214,7 +215,7 @@ public class WallRun : MonoBehaviour
 
 
 
-            if (canRunAlong == true)
+            if (canRunAlong == true )
             {
                 characterController.charVelocity = vertical * wallSpeed * alongWall;
             }

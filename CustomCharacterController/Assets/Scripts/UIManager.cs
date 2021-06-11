@@ -1,6 +1,6 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     public TextMeshProUGUI speed;
@@ -47,6 +47,10 @@ public class UIManager : MonoBehaviour
     public void AdjustWallRS(float newSpeed)
     {
         wallRun.wallSpeed = newSpeed;
+    }
+    public void ResetScene()
+    {
+        SceneManager.LoadScene(0);
     }
     
 }
