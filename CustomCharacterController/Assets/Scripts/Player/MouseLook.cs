@@ -32,7 +32,7 @@ public class MouseLook : MonoBehaviour
         lookDirection += deltaLook;     
 
         //lookDirection.y = Mathf.Clamp(lookDirection.y, -75f, 75f);    
-        Debug.Log(lookDirection.y);
+        //Debug.Log(lookDirection.y);
     }
 
     

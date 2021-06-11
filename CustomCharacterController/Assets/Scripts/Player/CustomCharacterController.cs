@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CustomCharacterController : MonoBehaviour
@@ -15,6 +13,9 @@ public class CustomCharacterController : MonoBehaviour
     public float Speed = 5f;
     [HideInInspector] public CharacterController charController;
     public Camera playerCamera;
+    public float defaultPushPower;
+    public float pushPower;
+   
 
     [Header("Jump")]
     public LayerMask Ground;
@@ -32,11 +33,11 @@ public class CustomCharacterController : MonoBehaviour
     [HideInInspector] public float verticalCamAng = 0f;
 
     [Header("Dash")]
-   // public float DashSpeed = 5f;
     public float DashDistance;
-    //public float DashTime;
+    public float dashPushMultiplier; 
+    public bool isDashing = false;
     public Vector3 Drag;
-
+    
     [Header("WallRun")]
     public WallRun wallRun;
 
@@ -90,18 +91,29 @@ public class CustomCharacterController : MonoBehaviour
     }
     void Dash()
     {
-
-        charVelocity += Vector3.Scale(transform.forward, DashDistance * new Vector3(
-           Mathf.Log(1f / ((Time.deltaTime * Drag.x) + 1)) / -Time.deltaTime,
-           0,
-            Mathf.Log(1f / (Time.deltaTime * Drag.z + 1)) / -Time.deltaTime));
-
-
-
-        //charController.Move(DashDistance * Time.deltaTime * transform.forward);
-            Debug.Log("Dash");
+        float acceleration = 0f;
         
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            isDashing = true;
+            defaultPushPower = defaultPushPower* dashPushMultiplier;
+            Debug.LogWarning(defaultPushPower);
+            charVelocity += Vector3.Scale(transform.forward, DashDistance * new Vector3(
+               Mathf.Log(1f / ((Time.deltaTime * Drag.x) + 1)) / -Time.deltaTime,
+               0,
+                Mathf.Log(1f / (Time.deltaTime * Drag.z + 1)) / -Time.deltaTime));
+            
 
+
+          //charController.Move(DashDistance * Time.deltaTime * transform.forward);
+            Debug.Log(charVelocity);
+            
+        }
+        else
+        {
+            defaultPushPower = pushPower;
+        }
+        
        
     }
 
@@ -123,10 +135,36 @@ public class CustomCharacterController : MonoBehaviour
         charGroundCheck = transform.GetChild(0);
         curJumps = maxJumpTimes;
         defaultGravity = Gravity;
+        defaultPushPower = pushPower;
     }
+
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Rigidbody body = hit.collider.attachedRigidbody;
+
+        
+        if (body is null || body.isKinematic)
+        {
+            return;
+        }
+        if (hit.moveDirection.y < -0.3)
+        {
+            return;
+        }
+
+        Vector3 pushDir = new Vector3(hit.moveDirection.x, hit.moveDirection.y, hit.moveDirection.z);
+
+        body.velocity = pushDir * defaultPushPower;
+        Debug.LogWarning(defaultPushPower);
+    }
+
+
 
     void Update()
     {
+
+
         IsGrounded();
         MovementHandler();
         if(wallRun.isWallRunning)
@@ -138,10 +176,9 @@ public class CustomCharacterController : MonoBehaviour
             defaultGravity = Gravity;
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
+                   
             Dash();
-        }
+        
         
         
 

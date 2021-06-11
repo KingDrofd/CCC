@@ -721,6 +721,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61331d25006d5ac43b1f95c91ad89238, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultGravity: 9.81
   Gravity: 9.81
   charVelocity: {x: 0, y: 0, z: 0}
   Speed: 8
@@ -734,9 +735,8 @@ MonoBehaviour:
   GroundDistance: 0.4
   rotationSpeed: 1
   rotationMultiplier: 1
-  DashSpeed: 5
+  verticalCamAng: 0
   DashDistance: 20
-  DashTime: 0
   Drag: {x: 10, y: 0, z: 10}
   wallRun: {fileID: 746738548}
 --- !u!143 &746738546
@@ -792,10 +792,11 @@ MonoBehaviour:
   wallSpeed: 13
   WallRunUpAngle: 10
   WallRunDownAngle: -10
+  canRunUp: 0
+  canRunDown: 0
+  canRunAlong: 0
   isWallRunning: 0
   jumping: 0
-  characterController: {fileID: 746738545}
-  mouseLook: {fileID: 746738544}
   camera: {fileID: 52626402}
   maxAngleRoll: 20
   cameraTransitionDuration: 0.4
