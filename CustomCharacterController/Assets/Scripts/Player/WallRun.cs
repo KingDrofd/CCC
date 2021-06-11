@@ -1,49 +1,58 @@
 using UnityEngine;
 using System.Linq;
-using UnityEngine.Rendering;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class WallRun : MonoBehaviour
 {
-
+    [Space(3, order = 0)]
+    [Header("Wall Characteristics")]
+    
     public float wallMaxDistance;
     public float minimumJumpHeight = 1.2f;
     public float jumpDuration = 1f;
     public float normalizedAngleThreshold = 0.1f;
     public float wallGravity= 20f;
     public float wallSpeed;
-    public float WallRunUpAngle;
+
     [Tooltip("Should be negative")]
+    public float WallRunUpAngle;
     public float WallRunDownAngle;
     float timePassedSinceJump = 0;
     float timePassedSinceAttached = 0;
     float timePassedSinceDetached = 0;
+
+
+    [Header("Wall Run Directions")]    
+    [Tooltip("Enable if you want to Run up the wall")]public bool canRunUp = false;
+    [Tooltip("Enable if you want to Run Down the wall")]public bool canRunDown = false;
+    [Tooltip("Enable if you want to Run along the wall")]public bool canRunAlong = false;
+    [HideInInspector]public bool isWallRunning = false;
+    [HideInInspector]public bool jumping;
+
+
     
 
-    public bool isWallRunning = false;
-    public bool jumping;
-    [SerializeField] private CustomCharacterController characterController;
-
     
+    [Header("Camera Rotation Angle")]    
+    public new Camera camera;
+    private MouseLook mouseLook;
+    public float maxAngleRoll;
+    public float cameraTransitionDuration;
 
+    private CustomCharacterController characterController;
     Vector3 lastWallPosition;
     Vector3 lastWallNormal;
 
     RaycastHit[] hitDir;
     Vector3[] directions;
 
-
-
-
-    [Header("Looking")]
-    public MouseLook mouseLook;
-    public new Camera camera;
-    public float maxAngleRoll;
-    public float cameraTransitionDuration;
-
-
-
     private void Start()
     {
+        mouseLook = GetComponent<MouseLook>();
+        characterController = GetComponent<CustomCharacterController>();
+
         directions = new Vector3[] {
             Vector3.right,
             Vector3.left,
@@ -55,7 +64,18 @@ public class WallRun : MonoBehaviour
     }
 
     
-
+    public void CanRunUp(bool value)
+    {
+        canRunUp = value;         
+    } 
+    public void CanRunDown(bool value)
+    {
+        canRunDown = value;
+    } 
+    public void CanRunAlong(bool value)
+    {
+        canRunAlong = value;
+    }
     float CalculateSide()
     {
         if (isWallRunning)
@@ -94,12 +114,14 @@ public class WallRun : MonoBehaviour
 
     private void LateUpdate()
     {
-       
+
         isWallRunning = false;
-       if(Input.GetButtonDown("Jump"))
+        if (canRunAlong == true || canRunDown == true || canRunUp == true)
         {
+            if (Input.GetButtonDown("Jump"))
+            {
             jumping = true;
-        }
+            }
         if (CanAttach())
         {
             hitDir = new RaycastHit[directions.Length];
@@ -110,17 +132,17 @@ public class WallRun : MonoBehaviour
                 Physics.Raycast(transform.position, direction, out hitDir[i], wallMaxDistance);
                 if (hitDir[i].collider != null)
                 {
-                    Debug.DrawRay(transform.position, direction * hitDir[i].distance, Color.red);                    
+                    Debug.DrawRay(transform.position, direction * hitDir[i].distance, Color.red);
                 }
                 else
                 {
                     Debug.DrawRay(transform.position, direction * hitDir[i].distance, Color.yellow);
                 }
             }
-            if(CanWallRun())
+            if (CanWallRun())
             {
                 hitDir = hitDir.ToList().Where(h => h.collider != null).OrderBy(h => h.distance).ToArray();
-                if(hitDir.Length > 0)
+                if (hitDir.Length > 0)
                 {
                     OnWall(hitDir[0]);
                     lastWallPosition = hitDir[0].point;
@@ -128,31 +150,40 @@ public class WallRun : MonoBehaviour
                 }
             }
         }
-        if(isWallRunning)
-        {
-            timePassedSinceDetached = 0;
-            timePassedSinceAttached += Time.deltaTime;
-            if (mouseLook.lookDirection.y >= WallRunUpAngle)
+        
+            if (isWallRunning)
             {
-                characterController.charVelocity += Time.deltaTime * wallGravity * Vector3.up;
+                timePassedSinceDetached = 0;
+                timePassedSinceAttached += Time.deltaTime;
+                if (canRunAlong == true)
+                {
+                    characterController.charVelocity += Time.deltaTime * wallGravity * Vector3.forward;
+                }
+                else if (mouseLook.lookDirection.y >= WallRunUpAngle && canRunUp == true)
+                {
+                    characterController.charVelocity += Time.deltaTime * wallGravity * Vector3.up;
+
+                }
+                else if (mouseLook.lookDirection.y <= WallRunDownAngle && canRunDown == true)
+                {
+                    characterController.charVelocity += Time.deltaTime * wallGravity * Vector3.down;
+
+                }
                 
 
+                Debug.Log("wallRunning");
             }
-            else if (mouseLook.lookDirection.y <= WallRunDownAngle)
+            else
             {
-                characterController.charVelocity += Time.deltaTime * wallGravity * Vector3.down;
-               
+                timePassedSinceAttached = 0;
+                timePassedSinceDetached += Time.deltaTime;
             }
-
-              
-            Debug.Log("wallRunning");
-        }else
+        }
+        else 
         {
-            timePassedSinceAttached = 0;
-            timePassedSinceDetached += Time.deltaTime;
+            Debug.LogError("No Direction specified in Wall Run Directions");
         }
     }
-
 
     bool CanAttach()
     {
@@ -180,24 +211,41 @@ public class WallRun : MonoBehaviour
             Vector3 downWall = transform.TransformDirection(Vector3.down + Vector3.forward);
             Debug.DrawRay(transform.position, alongWall.normalized * 10, Color.green);
             Debug.DrawRay(transform.position, lastWallNormal * 10, Color.magenta);
-           
-            characterController.charVelocity = vertical * wallSpeed * alongWall;
 
-            if (mouseLook.lookDirection.y >= WallRunUpAngle)
-            { characterController.charVelocity = vertical * wallSpeed * upWall; }    
 
-            else if (mouseLook.lookDirection.y <= WallRunDownAngle)
-            { characterController.charVelocity = vertical * wallSpeed * downWall; }
-                
+
+            if (canRunAlong == true)
+            {
+                characterController.charVelocity = vertical * wallSpeed * alongWall;
+            }
+            else if (mouseLook.lookDirection.y >= WallRunUpAngle && canRunUp == true)
+            { 
+                characterController.charVelocity = vertical * wallSpeed * upWall; 
+            }    
+            else if (mouseLook.lookDirection.y <= WallRunDownAngle && canRunDown == true)
+            { 
+                characterController.charVelocity = vertical * wallSpeed * downWall; 
+            } 
+         
             isWallRunning = true;
         }
     }
+
     private void OnGUI()
     {
-        GUIStyle style = new GUIStyle();
-        style.fontSize = 24;
-        GUI.Label(new Rect(10, 0, 0, 0), "Looking at Y in: " + characterController.verticalCamAng, style);
+        GUIStyle style = new GUIStyle
+        {
+            fontSize = 24
+        };
+        
+          
+            GUI.Label(new Rect(10, 0, 0, 0), "Wall Running Up: " + canRunUp, style);
+            GUI.Label(new Rect(10, 25, 0, 0), "Wall Running Down: " + canRunDown, style);
+            GUI.Label(new Rect(10, 50, 0, 0), "Wall Running Along: " + canRunAlong, style);
+        
+      
     }
 
 
 }
+

@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class CustomCharacterController : MonoBehaviour
 {
-  
+
 
     #region
 
     [Header("CharacterMovement")]
-    public float Gravity = 9.81f;
-    [HideInInspector]public Vector3 charVelocity;   
+    public float defaultGravity = 9.81f;
+    public float Gravity;
+    [HideInInspector] public Vector3 charVelocity;
     public float Speed = 5f;
-    [HideInInspector]public CharacterController charController;
-     public new Camera playerCamera;
+    [HideInInspector] public CharacterController charController;
+    public Camera playerCamera;
 
     [Header("Jump")]
     public LayerMask Ground;
@@ -28,25 +29,23 @@ public class CustomCharacterController : MonoBehaviour
     [Header("looking")]
     public float rotationSpeed;
     public float rotationMultiplier;
-    [HideInInspector]public float verticalCamAng = 0f;
+    [HideInInspector] public float verticalCamAng = 0f;
 
     [Header("Dash")]
-    public float DashSpeed = 5f;
+   // public float DashSpeed = 5f;
     public float DashDistance;
-    public float DashTime;
+    //public float DashTime;
     public Vector3 Drag;
 
     [Header("WallRun")]
     public WallRun wallRun;
- 
+
 
     private Transform charGroundCheck;
 
 
     #endregion
 
-
-   
     void MovementHandler()
     {
 
@@ -123,6 +122,7 @@ public class CustomCharacterController : MonoBehaviour
         charController = GetComponent<CharacterController>();
         charGroundCheck = transform.GetChild(0);
         curJumps = maxJumpTimes;
+        defaultGravity = Gravity;
     }
 
     void Update()
@@ -131,11 +131,11 @@ public class CustomCharacterController : MonoBehaviour
         MovementHandler();
         if(wallRun.isWallRunning)
         {
-            Gravity = 0f;
+            defaultGravity = 0f;
         }
-        else
+       else
         {
-            Gravity = 9.81f;
+            defaultGravity = Gravity;
         }
 
         if (Input.GetKeyDown(KeyCode.E))
@@ -148,8 +148,8 @@ public class CustomCharacterController : MonoBehaviour
         
         if (charController.isGrounded)
         {
-            Gravity = 9.81f;
-            charVelocity.y = -Gravity * Time.deltaTime;
+            defaultGravity = Gravity;
+            charVelocity.y = -defaultGravity * Time.deltaTime;
             if (Input.GetButtonDown("Jump"))
             {
                 Jump();
@@ -157,7 +157,7 @@ public class CustomCharacterController : MonoBehaviour
         }
         else
         {
-            charVelocity.y -= Gravity * Time.deltaTime;
+            charVelocity.y -= defaultGravity * Time.deltaTime;
         }
 
      
