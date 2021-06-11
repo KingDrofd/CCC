@@ -291,6 +291,7 @@ MonoBehaviour:
   GroundDistance: 0.2
   rotationSpeed: 1
   rotationMultiplier: 1
+  verticalCamAng: 0
   DashSpeed: 5
   DashDistance: 3.15
   DashTime: 0

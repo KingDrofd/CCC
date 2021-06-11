@@ -22,25 +22,16 @@ public class MouseLook : MonoBehaviour
     }
 
     void MouseLookHandler()
-    {
-       
+    {       
         Vector2 mouseDirection = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
         mouseDirection = Vector2.Scale(mouseDirection, new Vector2(lookSensitivity, lookSensitivity));
 
-        Vector2 deltaLook = new Vector2();
-
-        deltaLook.x = Mathf.Lerp(deltaLook.x, mouseDirection.x, 1.0f / smooting);
+        Vector2 deltaLook = new Vector2();        
         deltaLook.y = Mathf.Lerp(deltaLook.y, mouseDirection.y, 1.0f / smooting);
 
-        lookDirection += deltaLook;
+        lookDirection += deltaLook;     
 
-        rotation = new Vector3(0, Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime, 0);
-
-        lookDirection.y = Mathf.Clamp(lookDirection.y, -75f, 75f);
-
-        playerCamera.transform.localRotation = Quaternion.AngleAxis(-lookDirection.y, Vector3.right);
-        player.transform.localRotation = Quaternion.AngleAxis(lookDirection.x, player.transform.up);
-        player.transform.Rotate(rotation);
+        lookDirection.y = Mathf.Clamp(lookDirection.y, -75f, 75f);    
         Debug.Log(lookDirection.y);
     }
 

@@ -192,5 +192,12 @@ public class WallRun : MonoBehaviour
             isWallRunning = true;
         }
     }
-    
+    private void OnGUI()
+    {
+        GUIStyle style = new GUIStyle();
+        style.fontSize = 24;
+        GUI.Label(new Rect(10, 0, 0, 0), "Looking at Y in: " + characterController.verticalCamAng, style);
+    }
+
+
 }

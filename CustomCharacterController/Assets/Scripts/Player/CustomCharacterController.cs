@@ -28,7 +28,7 @@ public class CustomCharacterController : MonoBehaviour
     [Header("looking")]
     public float rotationSpeed;
     public float rotationMultiplier;
-    float verticalCamAng = 0f;
+    [HideInInspector]public float verticalCamAng = 0f;
 
     [Header("Dash")]
     public float DashSpeed = 5f;
@@ -51,17 +51,17 @@ public class CustomCharacterController : MonoBehaviour
     {
 
         transform.Rotate(new Vector3(0f, (Input.GetAxis("Mouse X") * rotationSpeed * rotationMultiplier)));
-        verticalCamAng -= Input.GetAxis("Mouse Y");
-        verticalCamAng = Mathf.Clamp(verticalCamAng, -89f, 89f);
+        verticalCamAng += -Input.GetAxis("Mouse Y");        
 
         if(wallRun != null)
         {
             playerCamera.transform.localEulerAngles = new Vector3(verticalCamAng, 0, wallRun.GetCameraRoll());
-
+            //Debug.Log(verticalCamAng);
         }
         else
         {
-            playerCamera.transform.localEulerAngles = new Vector3(verticalCamAng, 0, 0);
+            playerCamera.transform.localEulerAngles = new Vector3(-verticalCamAng, 0, 0);
+            //Debug.Log(verticalCamAng);
         }
 
         float x = Input.GetAxisRaw("Horizontal");
