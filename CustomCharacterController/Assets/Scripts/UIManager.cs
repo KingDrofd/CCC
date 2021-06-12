@@ -20,18 +20,19 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if(Input.GetKeyDown(KeyCode.Mouse2))
+        if(Input.GetKeyDown(KeyCode.Mouse2) && Cursor.visible == true)
         {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
-        }else
+        }
+        else if (Input.GetKeyDown(KeyCode.Mouse2) )
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
+      
 
-        speed.text = "Speed: " + charController.Speed.ToString();
+        speed.text = "Speed: " + charController.curSpeed.ToString();
         gravity.text = "Gravity: " + charController.Gravity.ToString();
         jumpForce.text = "JumpForce: " + charController.jumpForce.ToString();
         dashForce.text = "dashForce: " + charController.DashDistance.ToString();
@@ -42,7 +43,7 @@ public class UIManager : MonoBehaviour
 
     public void AdjustSpeed(float newSpeed)
     {        
-        charController.Speed = newSpeed;
+        charController.curSpeed = newSpeed;
     }
 
     public void AdjustGravity (float newGravity)

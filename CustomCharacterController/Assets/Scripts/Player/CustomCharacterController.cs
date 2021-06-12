@@ -1,5 +1,6 @@
 using UnityEngine;
-
+using UnityEngine.UI;
+using UnityEngine.Video;
 public class CustomCharacterController : MonoBehaviour
 {
 
@@ -11,11 +12,12 @@ public class CustomCharacterController : MonoBehaviour
     public float Gravity;
     [HideInInspector] public Vector3 charVelocity;
     public float Speed = 5f;
+    public float curSpeed;
+    public float speedMultiplier;
     [HideInInspector] public CharacterController charController;
     public Camera playerCamera;
     public float defaultPushPower;
     public float pushPower;
-   
 
     [Header("Jump")]
     public LayerMask Ground;
@@ -51,7 +53,8 @@ public class CustomCharacterController : MonoBehaviour
     {
 
         transform.Rotate(new Vector3(0f, (Input.GetAxis("Mouse X") * rotationSpeed * rotationMultiplier)));
-        verticalCamAng += -Input.GetAxis("Mouse Y");        
+        verticalCamAng += -Input.GetAxis("Mouse Y");
+        verticalCamAng = Mathf.Clamp(verticalCamAng, -89f, 89f);
 
         if(wallRun != null)
         {
@@ -72,7 +75,7 @@ public class CustomCharacterController : MonoBehaviour
 
         Vector3 move = transform.right * x + transform.forward * z;
 
-        charController.Move(Speed * Time.deltaTime * move.normalized);
+        charController.Move(curSpeed * Time.deltaTime * move.normalized);
 
         charVelocity.y += -Gravity * Time.deltaTime;
 
@@ -96,7 +99,7 @@ public class CustomCharacterController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             isDashing = true;
-            defaultPushPower = defaultPushPower* dashPushMultiplier;
+            
             Debug.LogWarning(defaultPushPower);
             charVelocity += Vector3.Scale(transform.forward, DashDistance * new Vector3(
                Mathf.Log(1f / ((Time.deltaTime * Drag.x) + 1)) / -Time.deltaTime,
@@ -109,11 +112,7 @@ public class CustomCharacterController : MonoBehaviour
             Debug.Log(charVelocity);
             
         }
-        else
-        {
-            defaultPushPower = pushPower;
-        }
-        
+       
        
     }
 
@@ -136,14 +135,18 @@ public class CustomCharacterController : MonoBehaviour
         curJumps = maxJumpTimes;
         defaultGravity = Gravity;
         defaultPushPower = pushPower;
+        curSpeed = Speed;
     }
 
+    
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         Rigidbody body = hit.collider.attachedRigidbody;
-
+         
         
+       
+
         if (body is null || body.isKinematic)
         {
             return;
@@ -154,8 +157,27 @@ public class CustomCharacterController : MonoBehaviour
         }
 
         Vector3 pushDir = new Vector3(hit.moveDirection.x, hit.moveDirection.y, hit.moveDirection.z);
+        if (curSpeed > Speed && curSpeed <= 20)
+        {
 
-        body.velocity = pushDir * defaultPushPower;
+            body.velocity += pushDir * defaultPushPower * speedMultiplier;
+            print(speedMultiplier);
+        }
+        else if(curSpeed > Speed && curSpeed <= 50)
+        {
+            body.velocity += pushDir * defaultPushPower * (speedMultiplier + 1.5f);
+        }
+        else if (curSpeed < Speed && curSpeed >= 1)
+        {            
+            body.velocity -= pushDir * defaultPushPower * .4f;
+            print(speedMultiplier);
+        }
+        else
+        {
+            body.velocity = pushDir * defaultPushPower;
+            print(defaultPushPower);
+        }
+        
         Debug.LogWarning(defaultPushPower);
     }
 
@@ -164,7 +186,9 @@ public class CustomCharacterController : MonoBehaviour
     void Update()
     {
 
-
+        
+        
+       
         IsGrounded();
         MovementHandler();
         if(wallRun.isWallRunning)

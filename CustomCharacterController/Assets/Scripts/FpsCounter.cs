@@ -13,9 +13,6 @@ public class FpsCounter : MonoBehaviour
         float fps = 1 / Time.unscaledDeltaTime;
         fpsDisplay.text = "FPS: " + fps;
 
-        if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
+      
     }
 }

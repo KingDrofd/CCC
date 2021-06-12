@@ -9,16 +9,16 @@ public class MouseLook : MonoBehaviour
     public Camera playerCamera;
 
     [HideInInspector]public Vector2 lookDirection;
-    Vector3 rotation;
+    
 
-    private float turnSpeed = 2f;
+    
     public float lookSensitivity;
     public float smooting;
 
 
     private void Start()
     {
-        //Cursor.lockState = CursorLockMode.Locked;
+        
     }
 
     void MouseLookHandler()
