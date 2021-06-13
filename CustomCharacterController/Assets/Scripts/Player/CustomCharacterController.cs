@@ -1,6 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Video;
+
 public class CustomCharacterController : MonoBehaviour
 {
 
@@ -17,12 +16,11 @@ public class CustomCharacterController : MonoBehaviour
     [HideInInspector] public CharacterController charController;
     public Camera playerCamera;
     public float defaultPushPower;
-    public float pushPower;
+    
 
     [Header("Jump")]
     public LayerMask Ground;
-    private int maxJumpTimes = 2;
-    private int curJumps;
+    
     public float JumpHeight;
     public float jumpForce = 2f;
     public float GroundDistance = 0.2f;
@@ -36,8 +34,6 @@ public class CustomCharacterController : MonoBehaviour
 
     [Header("Dash")]
     public float DashDistance;
-    public float dashPushMultiplier; 
-    public bool isDashing = false;
     public Vector3 Drag;
     
     [Header("WallRun")]
@@ -59,12 +55,12 @@ public class CustomCharacterController : MonoBehaviour
         if(wallRun != null)
         {
             playerCamera.transform.localEulerAngles = new Vector3(verticalCamAng, 0, wallRun.GetCameraRoll());
-            //Debug.Log(verticalCamAng);
+            
         }
         else
         {
             playerCamera.transform.localEulerAngles = new Vector3(-verticalCamAng, 0, 0);
-            //Debug.Log(verticalCamAng);
+           
         }
 
         float x = Input.GetAxisRaw("Horizontal");
@@ -94,11 +90,11 @@ public class CustomCharacterController : MonoBehaviour
     }
     void Dash()
     {
-       // float acceleration = 0f;
+       
         
         if (Input.GetKeyDown(KeyCode.E))
         {
-            isDashing = true;
+            
             
             Debug.LogWarning(defaultPushPower);
             charVelocity += Vector3.Scale(transform.forward, DashDistance * new Vector3(
@@ -109,7 +105,7 @@ public class CustomCharacterController : MonoBehaviour
 
 
           //charController.Move(DashDistance * Time.deltaTime * transform.forward);
-            Debug.Log(charVelocity);
+            
             
         }
        
@@ -120,7 +116,7 @@ public class CustomCharacterController : MonoBehaviour
 
     public void Jump()
     {
-        if (Input.GetButtonDown("Jump") && charController.isGrounded == true && curJumps <= maxJumpTimes)
+        if (Input.GetButtonDown("Jump") && charController.isGrounded == true)
         {            
             charVelocity.y = jumpForce;
             Debug.Log("Jumped");
@@ -130,11 +126,11 @@ public class CustomCharacterController : MonoBehaviour
     }
     void Start()
     {
+        
         charController = GetComponent<CharacterController>();
-        charGroundCheck = transform.GetChild(0);
-        curJumps = maxJumpTimes;
+        charGroundCheck = transform.GetChild(0);        
         defaultGravity = Gravity;
-        defaultPushPower = pushPower;
+        
         curSpeed = Speed;
     }
 
@@ -143,9 +139,7 @@ public class CustomCharacterController : MonoBehaviour
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         Rigidbody body = hit.collider.attachedRigidbody;
-         
-        
-       
+
 
         if (body is null || body.isKinematic)
         {
@@ -160,16 +154,16 @@ public class CustomCharacterController : MonoBehaviour
         if (curSpeed > Speed && curSpeed <= 20)
         {
 
-            body.velocity += pushDir * defaultPushPower * speedMultiplier;
+            body.velocity += defaultPushPower * speedMultiplier * pushDir;
             print(speedMultiplier);
         }
         else if(curSpeed > Speed && curSpeed <= 50)
         {
-            body.velocity += pushDir * defaultPushPower * (speedMultiplier + 1.5f);
+            body.velocity += (speedMultiplier + 1.5f) * defaultPushPower * pushDir;
         }
         else if (curSpeed < Speed && curSpeed >= 1)
         {            
-            body.velocity -= pushDir * defaultPushPower * .4f;
+            body.velocity -= .4f * defaultPushPower * pushDir;
             print(speedMultiplier);
         }
         else
@@ -195,7 +189,7 @@ public class CustomCharacterController : MonoBehaviour
         {
             defaultGravity = 0f;
         }
-       else
+        else
         {
             defaultGravity = Gravity;
         }

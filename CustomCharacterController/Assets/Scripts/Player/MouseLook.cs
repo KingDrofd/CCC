@@ -15,12 +15,6 @@ public class MouseLook : MonoBehaviour
     public float lookSensitivity;
     public float smooting;
 
-
-    private void Start()
-    {
-        
-    }
-
     void MouseLookHandler()
     {       
         Vector2 mouseDirection = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));

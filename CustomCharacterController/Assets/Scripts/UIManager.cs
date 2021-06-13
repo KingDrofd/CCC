@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public TextMeshProUGUI speed;
@@ -9,15 +10,14 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI dashForce;
     public TextMeshProUGUI wallSpeed;
     public TextMeshProUGUI nat;
+    public TextMeshProUGUI pushForce;
     public CustomCharacterController charController;
     public WallRun wallRun;
     
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
+
+ 
+
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.Mouse2) && Cursor.visible == true)
@@ -38,12 +38,17 @@ public class UIManager : MonoBehaviour
         dashForce.text = "dashForce: " + charController.DashDistance.ToString();
         wallSpeed.text = "Wall Speed: " + wallRun.wallSpeed.ToString();
         nat.text = "Normalized Angle Threshold: " + wallRun.normalizedAngleThreshold.ToString();
+        pushForce.text = "Push Power: " + charController.defaultPushPower.ToString();
         
     }
 
     public void AdjustSpeed(float newSpeed)
     {        
         charController.curSpeed = newSpeed;
+    } 
+    public void AdjustPushPower(float newPPower)
+    {        
+        charController.defaultPushPower = newPPower;
     }
 
     public void AdjustGravity (float newGravity)

@@ -117,7 +117,9 @@ public class WallRun : MonoBehaviour
     {
 
         isWallRunning = false;
-        if ((canRunAlong == true && (canRunDown == false && canRunUp == false)) || (canRunUp == true &&(canRunDown == false && canRunAlong == false)) || (canRunDown == true &&(canRunAlong == false && canRunUp == false)))
+        if ((canRunAlong == true && (canRunDown == false && canRunUp == false)) 
+            || (canRunUp == true &&(canRunDown == false && canRunAlong == false)) 
+            || (canRunDown == true &&(canRunAlong == false && canRunUp == false)))
         {
             if (Input.GetButtonDown("Jump"))
             {
